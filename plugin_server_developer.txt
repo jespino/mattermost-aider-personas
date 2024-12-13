@@ -51,6 +51,128 @@ func (p *Plugin) OnDeactivate() error
 func (p *Plugin) OnConfigurationChange() error
     // Called whenever the plugin's configuration changes.
 
+func (p *Plugin) OnInstall(c *plugin.Context, event model.OnInstallEvent) error
+    // Called after plugin installation during onboarding
+
+func (p *Plugin) OnSendDailyTelemetry()
+    // Called when server sends daily telemetry data
+
+func (p *Plugin) OnCloudLimitsUpdated(limits *model.ProductLimits)
+    // Called when cloud product limits change
+
+func (p *Plugin) ConfigurationWillBeSaved(newCfg *model.Config) (*model.Config, error)
+    // Called before saving configuration changes
+
+func (p *Plugin) GenerateSupportData(c *plugin.Context) ([]*model.FileData, error)
+    // Called when generating support packet data
+
+HTTP Hooks:
+func (p *Plugin) ServeHTTP(c *plugin.Context, w http.ResponseWriter, r *http.Request)
+    // Called for HTTP/HTTPS requests to plugin endpoints
+
+func (p *Plugin) ServeMetrics(c *plugin.Context, w http.ResponseWriter, r *http.Request)
+    // Called to serve plugin metrics endpoint
+
+Command Hooks:
+func (p *Plugin) ExecuteCommand(c *plugin.Context, args *model.CommandArgs) (*model.CommandResponse, error)
+    // Called when a registered command is triggered
+
+User Hooks:
+func (p *Plugin) UserHasBeenCreated(c *plugin.Context, user *model.User)
+    // Called after user creation
+
+func (p *Plugin) UserWillLogIn(c *plugin.Context, user *model.User) string
+    // Called before user login, can reject by returning error string
+
+func (p *Plugin) UserHasLoggedIn(c *plugin.Context, user *model.User)
+    // Called after successful user login
+
+func (p *Plugin) UserHasBeenDeactivated(c *plugin.Context, user *model.User)
+    // Called when a user is deactivated
+
+Post Hooks:
+func (p *Plugin) MessageWillBePosted(c *plugin.Context, post *model.Post) (*model.Post, string)
+    // Called before saving a post, can modify or reject
+
+func (p *Plugin) MessageWillBeUpdated(c *plugin.Context, newPost, oldPost *model.Post) (*model.Post, string)
+    // Called before updating a post, can modify or reject
+
+func (p *Plugin) MessageHasBeenPosted(c *plugin.Context, post *model.Post)
+    // Called after post is saved
+
+func (p *Plugin) MessageHasBeenUpdated(c *plugin.Context, newPost, oldPost *model.Post)
+    // Called after post is updated
+
+func (p *Plugin) MessagesWillBeConsumed(posts []*model.Post) []*model.Post
+    // Called when posts are requested by client
+
+func (p *Plugin) MessageHasBeenDeleted(c *plugin.Context, post *model.Post)
+    // Called after post deletion
+
+Channel Hooks:
+func (p *Plugin) ChannelHasBeenCreated(c *plugin.Context, channel *model.Channel)
+    // Called after channel creation
+
+func (p *Plugin) UserHasJoinedChannel(c *plugin.Context, channelMember *model.ChannelMember, actor *model.User)
+    // Called after user joins channel
+
+func (p *Plugin) UserHasLeftChannel(c *plugin.Context, channelMember *model.ChannelMember, actor *model.User)
+    // Called after user leaves channel
+
+Team Hooks:
+func (p *Plugin) UserHasJoinedTeam(c *plugin.Context, teamMember *model.TeamMember, actor *model.User)
+    // Called after user joins team
+
+func (p *Plugin) UserHasLeftTeam(c *plugin.Context, teamMember *model.TeamMember, actor *model.User)
+    // Called after user leaves team
+
+File Hooks:
+func (p *Plugin) FileWillBeUploaded(c *plugin.Context, info *model.FileInfo, file io.Reader, output io.Writer) (*model.FileInfo, string)
+    // Called before file upload, can modify or reject
+
+Reaction Hooks:
+func (p *Plugin) ReactionHasBeenAdded(c *plugin.Context, reaction *model.Reaction)
+    // Called after reaction is added
+
+func (p *Plugin) ReactionHasBeenRemoved(c *plugin.Context, reaction *model.Reaction)
+    // Called after reaction is removed
+
+WebSocket Hooks:
+func (p *Plugin) OnWebSocketConnect(webConnID, userID string)
+    // Called when WebSocket connection opens
+
+func (p *Plugin) OnWebSocketDisconnect(webConnID, userID string)
+    // Called when WebSocket connection closes
+
+func (p *Plugin) WebSocketMessageHasBeenPosted(webConnID, userID string, req *model.WebSocketRequest)
+    // Called when WebSocket message received
+
+Shared Channel Hooks:
+func (p *Plugin) OnSharedChannelsSyncMsg(msg *model.SyncMsg, rc *model.RemoteCluster) (model.SyncResponse, error)
+    // Called for shared channel sync messages
+
+func (p *Plugin) OnSharedChannelsPing(rc *model.RemoteCluster) bool
+    // Called to check shared channel health
+
+func (p *Plugin) OnSharedChannelsAttachmentSyncMsg(fi *model.FileInfo, post *model.Post, rc *model.RemoteCluster) error
+    // Called for shared channel attachment sync
+
+func (p *Plugin) OnSharedChannelsProfileImageSyncMsg(user *model.User, rc *model.RemoteCluster) error
+    // Called for shared channel profile image sync
+
+Other Hooks:
+func (p *Plugin) OnPluginClusterEvent(c *plugin.Context, ev model.PluginClusterEvent)
+    // Called for plugin cluster events
+
+func (p *Plugin) RunDataRetention(nowTime, batchSize int64) (int64, error)
+    // Called during data retention jobs
+
+func (p *Plugin) NotificationWillBePushed(pushNotification *model.PushNotification, userID string) (*model.PushNotification, string)
+    // Called before push notification is sent
+
+func (p *Plugin) PreferencesHaveChanged(c *plugin.Context, preferences []model.Preference)
+    // Called after user preferences change
+
 HTTP Hooks:
 func (p *Plugin) ServeHTTP(c *plugin.Context, w http.ResponseWriter, r *http.Request)
     // Called for HTTP/HTTPS requests to the plugin's endpoint.
