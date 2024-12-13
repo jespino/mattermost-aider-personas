@@ -40,6 +40,71 @@ The only required field is either `text` or `attachments`. Messages support Mark
 
 For more details on implementation, see the [official Mattermost documentation](https://developers.mattermost.com/integrate/webhooks/incoming/).
 
+# Outgoing Webhooks
+
+Outgoing webhooks allow Mattermost to send HTTP POST requests to external applications when specific trigger words or patterns are detected in messages. They enable automated responses and integrations based on user messages.
+
+## Creating an Outgoing Webhook
+
+1. Go to **Product menu > Integrations > Outgoing Webhook**
+2. Click **Add Outgoing Webhook** and configure:
+   - Title and Description
+   - Content Type (application/json or application/x-www-form-urlencoded)
+   - Channel to monitor (optional)
+   - Trigger Words (optional)
+   - One or more Callback URLs to receive webhook requests
+3. Save to get your webhook token - keep this secure for request validation
+
+Either a channel or trigger words (or both) must be specified. If both are set, the message must match both conditions to trigger the webhook.
+
+## Request Format
+
+When triggered, Mattermost sends an HTTP POST to your endpoint with these parameters:
+
+```json
+{
+    "channel_id": "...",         // ID of the channel
+    "channel_name": "...",       // Name of the channel
+    "team_domain": "...",        // Team domain
+    "team_id": "...",           // Team ID
+    "post_id": "...",           // ID of triggering post
+    "text": "...",              // Message text
+    "timestamp": "...",         // Unix timestamp
+    "token": "...",             // Verification token
+    "trigger_word": "...",      // Word that triggered webhook
+    "user_id": "...",           // ID of sending user
+    "user_name": "..."          // Username of sender
+}
+```
+
+## Response Format
+
+Your endpoint can respond with a JSON payload to post a message back to Mattermost:
+
+```json
+{
+    "text": "Response message",              // Required if no attachments
+    "response_type": "comment",             // Optional: "comment" or "post"
+    "username": "bot-name",                 // Optional: override bot name
+    "icon_url": "https://...",             // Optional: override bot icon
+    "attachments": [],                      // Optional: add rich formatting
+    "props": {}                            // Optional: additional metadata
+}
+```
+
+The response_type can be:
+- "comment" - Reply to the triggering message
+- "post" (default) - Create a new message
+
+## Security Considerations
+
+- Validate the token in incoming requests matches your webhook token
+- Use HTTPS for webhook endpoints
+- Add trusted internal connections if needed
+- Consider IP whitelisting for added security
+
+For more details on implementation, see the [official Mattermost documentation](https://developers.mattermost.com/integrate/webhooks/outgoing/).
+
 # Custom Slash Commands
 
 Custom slash commands allow you to create custom commands that users can trigger from the message input box. When a user types your custom command, Mattermost sends an HTTP POST/GET request to your specified endpoint, which can then respond with messages and actions.
