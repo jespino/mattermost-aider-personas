@@ -234,18 +234,39 @@ func (p *Plugin) GetConfig() *model.Config
 func (p *Plugin) SavePluginConfig(config interface{}) error
     // Saves the plugin's configuration
 
+func (p *Plugin) LoadPluginConfiguration(dest interface{}) error
+    // Loads plugin configuration into destination interface
+
+func (p *Plugin) RegisterPluginConfigChangeHandler(handler func()) string
+    // Registers a handler for plugin config changes
+
 User Operations:
 func (p *Plugin) GetUser(userID string) (*model.User, error)
     // Gets a user by their ID
-
-func (p *Plugin) UpdateUser(user *model.User) (*model.User, error)
-    // Updates a user's information
 
 func (p *Plugin) GetUserByEmail(email string) (*model.User, error)
     // Gets a user by their email address
 
 func (p *Plugin) GetUserByUsername(username string) (*model.User, error)
     // Gets a user by their username
+
+func (p *Plugin) GetUsers(options *model.UserGetOptions) ([]*model.User, error)
+    // Gets users based on search options
+
+func (p *Plugin) GetUsersInTeam(teamID string, page int, perPage int) ([]*model.User, error)
+    // Gets users in a specific team
+
+func (p *Plugin) UpdateUser(user *model.User) (*model.User, error)
+    // Updates a user's information
+
+func (p *Plugin) DeleteUser(userID string) error
+    // Permanently deletes a user
+
+func (p *Plugin) GetUserStatus(userID string) (*model.Status, error)
+    // Gets a user's status
+
+func (p *Plugin) UpdateUserStatus(userID, status string) (*model.Status, error)
+    // Updates a user's status
 
 Team Operations:
 func (p *Plugin) GetTeam(teamID string) (*model.Team, error)
@@ -254,51 +275,167 @@ func (p *Plugin) GetTeam(teamID string) (*model.Team, error)
 func (p *Plugin) GetTeamByName(name string) (*model.Team, error)
     // Gets a team by its name
 
+func (p *Plugin) GetTeams() ([]*model.Team, error)
+    // Gets all teams
+
 func (p *Plugin) CreateTeam(team *model.Team) (*model.Team, error)
     // Creates a new team
+
+func (p *Plugin) UpdateTeam(team *model.Team) (*model.Team, error)
+    // Updates a team
+
+func (p *Plugin) DeleteTeam(teamID string) error
+    // Soft deletes a team
+
+func (p *Plugin) GetTeamsForUser(userID string) ([]*model.Team, error)
+    // Gets teams a user belongs to
 
 Channel Operations:
 func (p *Plugin) GetChannel(channelID string) (*model.Channel, error)
     // Gets a channel by its ID
 
+func (p *Plugin) GetChannelByName(teamID, name string, includeDeleted bool) (*model.Channel, error)
+    // Gets a channel by its name
+
+func (p *Plugin) GetChannelsForTeam(teamID string) ([]*model.Channel, error)
+    // Gets all channels in a team
+
 func (p *Plugin) CreateChannel(channel *model.Channel) (*model.Channel, error)
     // Creates a new channel
 
+func (p *Plugin) UpdateChannel(channel *model.Channel) (*model.Channel, error)
+    // Updates a channel
+
 func (p *Plugin) DeleteChannel(channelID string) error
-    // Deletes a channel
+    // Soft deletes a channel
+
+func (p *Plugin) AddChannelMember(channelID, userID string) (*model.ChannelMember, error)
+    // Adds a user to a channel
+
+func (p *Plugin) RemoveChannelMember(channelID, userID string) error
+    // Removes a user from a channel
 
 Post Operations:
 func (p *Plugin) CreatePost(post *model.Post) (*model.Post, error)
     // Creates a new post
 
+func (p *Plugin) UpdatePost(post *model.Post) (*model.Post, error)
+    // Updates an existing post
+
 func (p *Plugin) DeletePost(postID string) error
-    // Deletes a post
+    // Soft deletes a post
 
 func (p *Plugin) GetPost(postID string) (*model.Post, error)
     // Gets a post by its ID
+
+func (p *Plugin) GetPostsForChannel(channelID string, page, perPage int) (*model.PostList, error)
+    // Gets posts in a channel
+
+func (p *Plugin) SearchPostsInTeam(teamID string, params *model.SearchParams) (*model.PostList, error)
+    // Searches for posts in a team
 
 File Operations:
 func (p *Plugin) UploadFile(data []byte, channelID string, filename string) (*model.FileInfo, error)
     // Uploads a file to a channel
 
-func (p *Plugin) GetFileInfo(fileID string) (*model.FileInfo, error)
-    // Gets file metadata
-
 func (p *Plugin) GetFile(fileID string) ([]byte, error)
     // Gets file contents
 
+func (p *Plugin) GetFileInfo(fileID string) (*model.FileInfo, error)
+    // Gets file metadata
+
+func (p *Plugin) GetFileLink(fileID string) (string, error)
+    // Gets public link to file
+
+func (p *Plugin) ReadFile(path string) ([]byte, error)
+    // Reads a file from the plugin's directory
+
+func (p *Plugin) WriteFile(data []byte, path string) error
+    // Writes a file to the plugin's directory
+
 Key-Value Store Operations:
 func (p *Plugin) KVSet(key string, value []byte) error
-    // Sets a key-value pair in the plugin's storage
+    // Sets a key-value pair
+
+func (p *Plugin) KVSetWithExpiry(key string, value []byte, expireInSeconds int64) error
+    // Sets a key-value pair with expiration
 
 func (p *Plugin) KVGet(key string) ([]byte, error)
-    // Gets a value from the plugin's storage
+    // Gets a value by key
 
 func (p *Plugin) KVDelete(key string) error
-    // Deletes a key-value pair from the plugin's storage
+    // Deletes a key-value pair
 
-func (p *Plugin) KVList(page int, perPage int) ([]string, error)
-    // Lists all keys in the plugin's storage
+func (p *Plugin) KVList(page, perPage int) ([]string, error)
+    // Lists all keys
+
+func (p *Plugin) KVCompareAndSet(key string, oldValue, newValue []byte) (bool, error)
+    // Atomic compare and set operation
+
+func (p *Plugin) KVCompareAndDelete(key string, oldValue []byte) (bool, error)
+    // Atomic compare and delete operation
+
+Bot Operations:
+func (p *Plugin) CreateBot(bot *model.Bot) (*model.Bot, error)
+    // Creates a new bot account
+
+func (p *Plugin) GetBot(botUserID string) (*model.Bot, error)
+    // Gets a bot by its user ID
+
+func (p *Plugin) UpdateBot(bot *model.Bot) (*model.Bot, error)
+    // Updates a bot
+
+func (p *Plugin) PatchBot(botUserID string, patch *model.BotPatch) (*model.Bot, error)
+    // Patches a bot
+
+func (p *Plugin) DisableBot(botUserID string) (*model.Bot, error)
+    // Disables a bot
+
+func (p *Plugin) EnableBot(botUserID string) (*model.Bot, error)
+    // Enables a bot
+
+System Operations:
+func (p *Plugin) GetSystemInstallDate() (int64, error)
+    // Gets system installation date
+
+func (p *Plugin) GetDiagnosticId() string
+    // Gets diagnostic ID
+
+func (p *Plugin) GetServerVersion() string
+    // Gets Mattermost server version
+
+Permissions Operations:
+func (p *Plugin) HasPermissionTo(userID string, permission *model.Permission) bool
+    // Checks if user has permission
+
+func (p *Plugin) HasPermissionToTeam(userID, teamID string, permission *model.Permission) bool
+    // Checks if user has team permission
+
+func (p *Plugin) HasPermissionToChannel(userID, channelID string, permission *model.Permission) bool
+    // Checks if user has channel permission
+
+Session Operations:
+func (p *Plugin) GetSession(sessionID string) (*model.Session, error)
+    // Gets a session by ID
+
+func (p *Plugin) CreateSession(session *model.Session) (*model.Session, error)
+    // Creates a new session
+
+func (p *Plugin) RevokeSession(sessionID string) error
+    // Revokes a session
+
+Webhook Operations:
+func (p *Plugin) CreateIncomingWebhook(hook *model.IncomingWebhook) (*model.IncomingWebhook, error)
+    // Creates incoming webhook
+
+func (p *Plugin) GetIncomingWebhook(hookID string) (*model.IncomingWebhook, error)
+    // Gets incoming webhook
+
+func (p *Plugin) CreateOutgoingWebhook(hook *model.OutgoingWebhook) (*model.OutgoingWebhook, error)
+    // Creates outgoing webhook
+
+func (p *Plugin) GetOutgoingWebhook(hookID string) (*model.OutgoingWebhook, error)
+    // Gets outgoing webhook
 
 4. LOGGING GUIDELINES
 
