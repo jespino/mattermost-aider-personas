@@ -207,6 +207,72 @@ The `update` field modifies the original message, while `ephemeral_text` sends a
 
 For more details on implementation, see the [official Mattermost documentation](https://developers.mattermost.com/integrate/plugins/interactive-messages/).
 
+# Message Attachments
+
+Message attachments provide rich formatting options for messages posted by integrations. They are compatible with Slack's attachment format and offer additional styling capabilities beyond standard Markdown formatting.
+
+## Attachment Structure
+
+An attachment can include:
+
+```json
+{
+    "attachments": [{
+        "fallback": "Required plain-text summary",
+        "color": "#FF8000",                          // Hex color for left border
+        "pretext": "Text above attachment",          // Supports @mentions
+        "text": "Main attachment text",              // Supports Markdown
+        
+        "author_name": "Author Name",
+        "author_link": "http://author-link.com",
+        "author_icon": "http://author-icon.png",
+        
+        "title": "Attachment Title",
+        "title_link": "http://title-link.com",
+        
+        "fields": [{
+            "title": "Field Title",
+            "value": "Field value",
+            "short": true                            // Display fields in columns
+        }],
+        
+        "image_url": "http://image.jpg",            // Large image
+        "thumb_url": "http://thumb.jpg",            // Thumbnail (75x75px)
+        
+        "footer": "Optional footer text",
+        "footer_icon": "http://footer-icon.png"
+    }]
+}
+```
+
+## Key Features
+
+- **Color Coding**: Set a left border color to visually categorize messages
+- **Rich Text**: Support for Markdown formatting in text fields
+- **Fields**: Display data in organized columns
+- **Images**: Include full-size images or thumbnails
+- **Author Info**: Show source/author details with icons
+- **Interactive Elements**: Can be combined with buttons and menus
+
+## Usage Examples
+
+Common use cases include:
+
+- Error reports with color-coded severity
+- Build status notifications with detailed fields
+- Issue tracking updates with author attribution
+- Service alerts with relevant images
+- Deployment summaries with organized data fields
+
+## Security Notes
+
+- Validate all URLs before displaying
+- Sanitize user-provided content
+- Use HTTPS for all external resources
+- Consider image size limits
+
+For complete details on implementation, see the [official Mattermost documentation](https://developers.mattermost.com/integrate/reference/message-attachments/).
+
 # Custom Slash Commands
 
 Custom slash commands allow you to create custom commands that users can trigger from the message input box. When a user types your custom command, Mattermost sends an HTTP POST/GET request to your specified endpoint, which can then respond with messages and actions.
