@@ -1,3 +1,45 @@
+# Incoming Webhooks
+
+Incoming webhooks allow external applications to post messages to specific Mattermost channels. They provide a simple way to integrate external tools and services with Mattermost.
+
+## Creating an Incoming Webhook
+
+1. Go to **Product menu > Integrations > Incoming Webhook**
+2. Click **Add Incoming Webhook** and configure:
+   - Title and Description
+   - Channel to receive webhook messages
+   - Optional: Username and icon override
+3. Save to get your webhook URL: `https://your-mattermost-server.com/hooks/xxx-generatedkey-xxx`
+
+Keep this URL secret - anyone with it can post to your Mattermost instance.
+
+## Request Format
+
+Send an HTTP POST request to your webhook URL with a JSON payload:
+
+```json
+{
+    "text": "Hello from webhook!",
+    "channel": "town-square",      // Optional: override target channel
+    "username": "webhook-bot",     // Optional: override display name
+    "icon_url": "https://...",     // Optional: override icon
+    "icon_emoji": ":tada:",        // Optional: use emoji as icon
+    "attachments": [],             // Optional: add rich formatting
+    "props": {}                    // Optional: additional metadata
+}
+```
+
+The only required field is either `text` or `attachments`. Messages support Markdown formatting.
+
+## Security Considerations
+
+- Keep webhook URLs confidential
+- Use HTTPS for webhook endpoints
+- Validate webhook requests in your receiving application
+- Consider IP whitelisting if needed
+
+For more details on implementation, see the [official Mattermost documentation](https://developers.mattermost.com/integrate/webhooks/incoming/).
+
 # Custom Slash Commands
 
 Custom slash commands allow you to create custom commands that users can trigger from the message input box. When a user types your custom command, Mattermost sends an HTTP POST/GET request to your specified endpoint, which can then respond with messages and actions.
