@@ -343,7 +343,60 @@ Your handler can respond with:
     "ephemeral_text": "Message only shown to user who clicked"
 }
 
-3.4 Common API Operations
+3.4 Plugin Manifest
+
+The plugin manifest (plugin.json or plugin.yaml) defines the metadata required to load and present your plugin. This file must be placed in the root of your plugin bundle.
+
+Example manifest:
+{
+    "id": "com.mattermost.myplugin",
+    "name": "My Plugin",
+    "description": "A description of what your plugin does",
+    "version": "1.0.0",
+    "min_server_version": "7.0.0",
+    "server": {
+        "executables": {
+            "linux-amd64": "server/plugin-linux-amd64",
+            "darwin-amd64": "server/plugin-darwin-amd64",
+            "windows-amd64": "server/plugin-windows-amd64.exe"
+        }
+    },
+    "webapp": {
+        "bundle_path": "webapp/dist/main.js"
+    },
+    "settings_schema": {
+        "header": "Configuration Settings",
+        "footer": "For more information, visit...",
+        "settings": [
+            {
+                "key": "apiKey",
+                "display_name": "API Key",
+                "type": "text",
+                "help_text": "Enter your API key",
+                "placeholder": "Enter key here",
+                "default": ""
+            }
+        ]
+    }
+}
+
+Key fields:
+- id: Unique identifier for your plugin (use reverse DNS notation)
+- name: Display name shown in the UI
+- description: Brief explanation of plugin functionality
+- version: Semantic version number
+- min_server_version: Minimum required Mattermost server version
+- server: Configuration for server-side plugin code
+- webapp: Configuration for web app plugin code
+- settings_schema: Plugin settings shown in System Console
+  - settings: Array of configuration options
+    - key: Setting identifier
+    - display_name: Label shown in UI
+    - type: Setting type (text, bool, dropdown, etc)
+    - help_text: Description shown to users
+    - default: Default value
+
+3.5 Common API Operations
 
 Configuration Management:
 func (p *Plugin) GetConfig() *model.Config
