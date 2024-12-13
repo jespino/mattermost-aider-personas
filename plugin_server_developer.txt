@@ -274,7 +274,76 @@ When the dialog is submitted, your app will receive a POST request with the form
     }
 }
 
-3.3 Common API Operations
+3.3 Interactive Messages
+
+Interactive messages allow plugins to add clickable buttons and dropdown menus to posts. These can be used to create rich interactions like polls, surveys, task management, and more.
+
+To create an interactive message, add an "actions" array to your message attachment JSON:
+
+{
+    "attachments": [{
+        "text": "Choose an action",
+        "actions": [
+            {
+                "id": "action_id",
+                "name": "Button Text",
+                "type": "button",
+                "style": "primary",
+                "integration": {
+                    "url": "https://your-plugin-url/handle-action",
+                    "context": {
+                        "action": "do_something"
+                    }
+                }
+            }
+        ]
+    }]
+}
+
+The following action types are supported:
+
+Button Actions:
+- id: Unique identifier for the button
+- name: Button label text
+- style: Button style (primary, danger, warning, success, default)
+- integration: Handler configuration
+  - url: Endpoint that receives the action
+  - context: Custom data passed to handler
+
+Menu Actions:
+- id: Unique identifier for the menu
+- name: Menu placeholder text
+- type: "select" 
+- integration: Handler configuration
+- options: Array of menu options
+  - text: Display text
+  - value: Value passed to handler
+
+Special Menu Types:
+- Channel Selector: Set data_source: "channels"
+- User Selector: Set data_source: "users"
+
+When an action is taken, your handler will receive a POST with:
+{
+    "user_id": "user_who_clicked",
+    "post_id": "message_post_id", 
+    "channel_id": "channel_id",
+    "team_id": "team_id",
+    "context": {
+        // Your custom context data
+    }
+}
+
+Your handler can respond with:
+{
+    "update": {
+        "message": "Updated message text",
+        "props": {} // Optional props to update
+    },
+    "ephemeral_text": "Message only shown to user who clicked"
+}
+
+3.4 Common API Operations
 
 Configuration Management:
 func (p *Plugin) GetConfig() *model.Config
