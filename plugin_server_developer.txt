@@ -225,7 +225,56 @@ File Hooks:
 func (p *Plugin) FileWillBeUploaded(c *plugin.Context, info *model.FileInfo, file io.Reader, output io.Writer) (*model.FileInfo, string, error)
     // Called before a file is uploaded.
 
-3.2 Common API Operations
+3.2 Interactive Dialogs
+
+Interactive dialogs provide a way to collect user input through modal forms. They can be triggered by slash commands, message buttons, or plugin actions.
+
+To open a dialog, use the following JSON format:
+
+{
+    "trigger_id": "<trigger_id from slash command or interactive message>",
+    "url": "https://your-app-url/dialog-submit",
+    "dialog": {
+        "callback_id": "my_dialog_id",
+        "title": "Dialog Title",
+        "introduction_text": "Optional markdown text above the form fields",
+        "elements": [
+            {
+                "display_name": "Field Label",
+                "name": "field_name",
+                "type": "text",
+                "placeholder": "Enter text here",
+                "help_text": "Optional help text"
+            }
+        ],
+        "submit_label": "Submit",
+        "notify_on_cancel": true,
+        "state": "optional-state-data"
+    }
+}
+
+The dialog elements can be of the following types:
+- text: Single-line text input
+- textarea: Multi-line text input  
+- select: Dropdown with options
+- bool: Checkbox
+- radio: Radio button group
+
+When the dialog is submitted, your app will receive a POST request with the form data:
+
+{
+    "type": "dialog_submission",
+    "callback_id": "my_dialog_id", 
+    "state": "optional-state-data",
+    "user_id": "user_id",
+    "channel_id": "channel_id",
+    "team_id": "team_id",
+    "submission": {
+        "field_name": "submitted value"
+    }
+}
+
+3.3 Common API Operations
 
 Configuration Management:
 func (p *Plugin) GetConfig() *model.Config
