@@ -104,13 +104,79 @@ func (p *Plugin) FileWillBeUploaded(c *plugin.Context, info *model.FileInfo, fil
     // Called before a file is uploaded.
 
 3.2 Common API Operations
-- Configuration management
-- User operations
-- Team operations
-- Channel operations
-- Post operations
-- File operations
-- Key-value store operations
+
+Configuration Management:
+func (p *Plugin) GetConfig() *model.Config
+    // Returns the current server configuration
+
+func (p *Plugin) SavePluginConfig(config interface{}) error
+    // Saves the plugin's configuration
+
+User Operations:
+func (p *Plugin) GetUser(userID string) (*model.User, error)
+    // Gets a user by their ID
+
+func (p *Plugin) UpdateUser(user *model.User) (*model.User, error)
+    // Updates a user's information
+
+func (p *Plugin) GetUserByEmail(email string) (*model.User, error)
+    // Gets a user by their email address
+
+func (p *Plugin) GetUserByUsername(username string) (*model.User, error)
+    // Gets a user by their username
+
+Team Operations:
+func (p *Plugin) GetTeam(teamID string) (*model.Team, error)
+    // Gets a team by its ID
+
+func (p *Plugin) GetTeamByName(name string) (*model.Team, error)
+    // Gets a team by its name
+
+func (p *Plugin) CreateTeam(team *model.Team) (*model.Team, error)
+    // Creates a new team
+
+Channel Operations:
+func (p *Plugin) GetChannel(channelID string) (*model.Channel, error)
+    // Gets a channel by its ID
+
+func (p *Plugin) CreateChannel(channel *model.Channel) (*model.Channel, error)
+    // Creates a new channel
+
+func (p *Plugin) DeleteChannel(channelID string) error
+    // Deletes a channel
+
+Post Operations:
+func (p *Plugin) CreatePost(post *model.Post) (*model.Post, error)
+    // Creates a new post
+
+func (p *Plugin) DeletePost(postID string) error
+    // Deletes a post
+
+func (p *Plugin) GetPost(postID string) (*model.Post, error)
+    // Gets a post by its ID
+
+File Operations:
+func (p *Plugin) UploadFile(data []byte, channelID string, filename string) (*model.FileInfo, error)
+    // Uploads a file to a channel
+
+func (p *Plugin) GetFileInfo(fileID string) (*model.FileInfo, error)
+    // Gets file metadata
+
+func (p *Plugin) GetFile(fileID string) ([]byte, error)
+    // Gets file contents
+
+Key-Value Store Operations:
+func (p *Plugin) KVSet(key string, value []byte) error
+    // Sets a key-value pair in the plugin's storage
+
+func (p *Plugin) KVGet(key string) ([]byte, error)
+    // Gets a value from the plugin's storage
+
+func (p *Plugin) KVDelete(key string) error
+    // Deletes a key-value pair from the plugin's storage
+
+func (p *Plugin) KVList(page int, perPage int) ([]string, error)
+    // Lists all keys in the plugin's storage
 
 4. LOGGING GUIDELINES
 
