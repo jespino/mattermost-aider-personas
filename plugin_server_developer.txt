@@ -1,0 +1,126 @@
+MATTERMOST PLUGIN DEVELOPMENT GUIDE FOR AI
+
+This guide contains essential information for developing Mattermost server plugins.
+
+1. PLUGIN STRUCTURE AND CONVENTIONS
+
+1.1 Project Layout
+- Follow Go team's standardized guidelines
+- Avoid using generic "pkg" directories
+- Don't use "util" or "misc" packages
+- Group related functionality into meaningful packages
+- Don't create too many small single-file packages
+
+1.2 Code Style
+- Use CamelCase for variables/constants (e.g., WebsocketEventPostEdited)
+- Use "err" for error variables and "appErr" for *model.AppError variables
+- Use empty string check with foo == "" instead of len(foo) == 0
+- Use proper initialisms (userID not userId, HTTP not Http)
+- Use meaningful receiver names (e.g., "c" or "cl" for "Client")
+
+2. PLUGIN DEVELOPMENT PRINCIPLES
+
+2.1 Synchronous vs Asynchronous
+- Default to synchronous functions
+- Only use async when performance benefits are proven
+- Control goroutine lifetimes
+- Consider error propagation and back-pressure
+
+2.2 Interface Design
+- Return structs, accept interfaces
+- Interface names should end with "-er"
+- Define interfaces in consuming packages
+- Use small, composable interfaces
+
+2.3 Error Handling
+- Use appropriate error types (error vs *model.AppError)
+- Follow error variable naming conventions
+- Propagate errors appropriately
+
+3. PLUGIN API REFERENCE
+
+3.1 Key Plugin Hooks
+- OnActivate() error
+- OnDeactivate() error
+- OnConfigurationChange() error
+- ServeHTTP(c *plugin.Context, w http.ResponseWriter, r *http.Request)
+- ExecuteCommand(c *plugin.Context, args *model.CommandArgs)
+- MessageWillBePosted(c *plugin.Context, post *model.Post)
+- UserHasLoggedIn(c *plugin.Context, user *model.User)
+
+3.2 Common API Operations
+- Configuration management
+- User operations
+- Team operations
+- Channel operations
+- Post operations
+- File operations
+- Key-value store operations
+
+4. LOGGING GUIDELINES
+
+4.1 Log Levels
+- Critical: Service unable to continue operating
+- Error: Unexpected issues requiring admin action
+- Warn: Unexpected but recoverable issues
+- Info: Normal operation events
+- Debug: Diagnostic information
+
+4.2 Logging Format
+- Use key-value pairs for context
+- Use snake_case for keys
+- Reference JSON struct tags for key names
+
+5. PERFORMANCE CONSIDERATIONS
+
+5.1 Areas Requiring Performance Review
+- New features needing benchmarks
+- Changes to critical components (Hub/WebConn)
+- SQL query modifications
+- Goroutine creation
+- Memory allocations
+- Synchronization primitives
+- Regular expressions
+- Reflect package usage
+
+5.2 Best Practices
+- Avoid pointer to slices
+- Use json.Marshal instead of ToJSON methods
+- Pre-allocate slices and maps when size is known
+- Avoid dynamic regexp.MustCompile
+- Control goroutine lifecycles
+
+6. TESTING REQUIREMENTS
+
+6.1 Test Coverage
+- Unit tests for new functionality
+- Integration tests for API changes
+- Performance tests for critical paths
+
+6.2 Test Guidelines
+- Test real implementations over mocks
+- Use docker containers for external services
+- Focus on public API testing
+
+7. BACKWARD COMPATIBILITY
+
+7.1 Considerations
+- Maintain API compatibility
+- Handle deprecated features gracefully
+- Document breaking changes
+
+8. SECURITY BEST PRACTICES
+
+8.1 Guidelines
+- Validate input data
+- Handle sensitive information securely
+- Follow proper authentication/authorization
+- Use secure communication channels
+
+Remember to:
+- Follow Go best practices from Effective Go
+- Adhere to CodeReviewComments guidelines
+- Consider performance implications
+- Maintain backward compatibility
+- Write comprehensive tests
+- Document public APIs
