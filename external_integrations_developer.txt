@@ -105,6 +105,108 @@ The response_type can be:
 
 For more details on implementation, see the [official Mattermost documentation](https://developers.mattermost.com/integrate/webhooks/outgoing/).
 
+# Interactive Messages
+
+Interactive messages allow you to add buttons and menus to your integration posts, enabling users to take actions directly through the message. This creates streamlined workflows by letting users interact with external systems without leaving Mattermost.
+
+## Message Buttons
+
+Add interactive buttons to your messages using message attachments. Each button can trigger a different action when clicked. Example button configuration:
+
+```json
+{
+    "attachments": [{
+        "text": "Choose an action:",
+        "actions": [{
+            "id": "action1",
+            "name": "Approve",
+            "style": "primary",
+            "integration": {
+                "url": "https://your-server.com/approve",
+                "context": {
+                    "action": "approve_request"
+                }
+            }
+        }, {
+            "id": "action2", 
+            "name": "Reject",
+            "style": "danger",
+            "integration": {
+                "url": "https://your-server.com/reject",
+                "context": {
+                    "action": "reject_request"
+                }
+            }
+        }]
+    }]
+}
+```
+
+Button styles can be: primary, danger, success, warning, or default.
+
+## Message Menus
+
+Add dropdown menus to let users select from a list of options. Example menu configuration:
+
+```json
+{
+    "attachments": [{
+        "text": "Select an option:",
+        "actions": [{
+            "id": "menu1",
+            "name": "Choose...", 
+            "type": "select",
+            "integration": {
+                "url": "https://your-server.com/handle_selection",
+                "context": {
+                    "action": "menu_selection"
+                }
+            },
+            "options": [
+                {"text": "Option 1", "value": "opt1"},
+                {"text": "Option 2", "value": "opt2"},
+                {"text": "Option 3", "value": "opt3"}
+            ]
+        }]
+    }]
+}
+```
+
+You can also create menus that list channels or users by setting `data_source` to "channels" or "users" instead of providing options.
+
+## Handling Interactions
+
+When a user clicks a button or selects a menu option, Mattermost sends a POST request to your integration's URL with:
+
+- user_id: ID of user who took the action
+- post_id: ID of the message containing the button/menu
+- channel_id: Channel where action occurred  
+- team_id: Team where action occurred
+- context: The context data you provided in the button/menu configuration
+
+Your integration should respond with either:
+
+```json
+{
+    "update": {
+        "message": "Updated message content",
+        "props": {} 
+    },
+    "ephemeral_text": "Only visible to the user who clicked"
+}
+```
+
+The `update` field modifies the original message, while `ephemeral_text` sends a temporary message only visible to the user who took the action.
+
+## Security Considerations
+
+- Use HTTPS URLs for your integration endpoints
+- Validate the context token in incoming requests matches what you set
+- Consider IP whitelisting if needed
+- Keep integration URLs and tokens confidential
+
+For more details on implementation, see the [official Mattermost documentation](https://developers.mattermost.com/integrate/plugins/interactive-messages/).
+
 # Custom Slash Commands
 
 Custom slash commands allow you to create custom commands that users can trigger from the message input box. When a user types your custom command, Mattermost sends an HTTP POST/GET request to your specified endpoint, which can then respond with messages and actions.
