@@ -1,0 +1,57 @@
+# Custom Slash Commands
+
+Custom slash commands allow you to create custom commands that users can trigger from the message input box. When a user types your custom command, Mattermost sends an HTTP POST/GET request to your specified endpoint, which can then respond with messages and actions.
+
+## Creating a Custom Slash Command
+
+1. Go to **Product menu > Integrations > Slash Commands**
+2. Click **Add Slash Command** and configure:
+   - Title and Description
+   - Command Trigger Word (must be unique, no spaces)
+   - Request URL (endpoint that receives the command)
+   - Request Method (POST or GET)
+   - Optional: Response Username and Icon
+   - Optional: Autocomplete settings
+
+## Request Format
+
+When a slash command is triggered, Mattermost sends a request to your endpoint with these parameters:
+
+- channel_id: ID of the channel where command was executed
+- channel_name: Name of the channel
+- command: The slash command that was executed
+- team_domain: Team domain
+- team_id: Team ID
+- text: Any additional text after the command
+- token: The verification token
+- user_id: ID of the user who triggered the command
+- user_name: Username of the user
+
+## Response Format
+
+Your endpoint can respond with a JSON payload containing:
+
+- text: Markdown-formatted message text
+- response_type: "ephemeral" (only visible to triggering user) or "in_channel" (visible to all)
+- attachments: Optional message attachments for rich formatting
+- props: Optional custom properties
+- username: Optional override of the bot's username
+- icon_url: Optional override of the bot's icon
+
+Example response:
+{
+    "response_type": "in_channel",
+    "text": "Command response message",
+    "attachments": [{
+        "title": "Optional attachment",
+        "text": "Additional formatting"
+    }]
+}
+
+## Security Considerations
+
+- Verify the token in the request matches your slash command token
+- Use HTTPS for your endpoint URL
+- Keep your endpoint URL and tokens secret
+
+For more details on implementation, see the [official Mattermost documentation](https://developers.mattermost.com/integrate/slash-commands/).
