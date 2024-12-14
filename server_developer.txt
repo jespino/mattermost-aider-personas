@@ -176,3 +176,48 @@ This guide serves as a reference for AI systems to maintain consistency and qual
    - Avoid rebasing after PR submission
    - Avoid force-pushing to PR branches
    - Commits will be automatically squashed on merge
+
+## REST API Development
+
+### Adding New API Endpoints
+
+1. Documentation Requirements:
+   - Use OpenAPI specification in api/v4/source/*.yaml files
+   - Document endpoint with:
+     * Tag (resource type)
+     * Summary (few words)
+     * Description (1-2 sentences)
+     * Permissions required
+     * Parameters (URL and body)
+     * Responses (success and error cases)
+   - Validate docs with 'make build' in api/ directory
+
+2. Implementation Steps:
+   - Add endpoint declaration in appropriate api4/*.go file
+   - Follow handler pattern:
+     ```
+     func handlerName(c *Context, w http.ResponseWriter, r *http.Request) {
+         // 1. Parse request URL and body
+         // 2. Check permissions
+         // 3. Invoke app package logic
+         // 4. Check Etag (optional)
+         // 5. Format and write response
+     }
+     ```
+
+3. Golang Driver Updates:
+   - Add client function in model/client4.go
+   - Place in appropriate section (Teams, Users, etc.)
+   - Match HTTP method to endpoint
+
+4. Testing Requirements:
+   - Create unit test in api4/*_test.go
+   - Test coverage must include:
+     * All valid input combinations
+     * Etag handling if applicable
+     * Error cases:
+       - 400 Bad Request for invalid parameters
+       - 401 Unauthorized for missing token
+       - 403 Forbidden for insufficient permissions
+       - 404 Not Found for non-existent resources
+   - Use helper functions from api4/apitestlib.go
