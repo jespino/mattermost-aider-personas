@@ -221,3 +221,31 @@ This guide serves as a reference for AI systems to maintain consistency and qual
        - 403 Forbidden for insufficient permissions
        - 404 Not Found for non-existent resources
    - Use helper functions from api4/apitestlib.go
+
+## System Console Configuration
+
+### Adding Configuration Fields
+
+1. Server-side Changes:
+   - Add fields to structs in model/config.go
+   - Set default values in corresponding SetDefaults method
+   - Add telemetry handling in services/telemetry package
+   - Use "// telemetry: none" comment if not collecting telemetry
+   - Add struct tags for access level restrictions
+   - Update GenerateClientConfig in config/client.go for non-admin access
+
+2. System Console UI:
+   - Add setting to AdminDefinition in webapp/channels/src/components/admin_console/admin_definition.jsx
+   - Define:
+     * Setting location/category
+     * Label and help text
+     * Input type and validation
+     * Dependencies on other settings
+   - Note: Client config values are always encoded as strings
+
+3. Best Practices:
+   - Group related settings in appropriate structs
+   - Use clear, descriptive field names
+   - Document default values and valid ranges
+   - Consider backwards compatibility
+   - Add migration code if needed
