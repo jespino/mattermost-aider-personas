@@ -197,6 +197,57 @@ Unit Testing Guidelines:
 
 Remember to always check existing implementations for patterns and consistency when making changes.
 
+15. REDUX ARCHITECTURE:
+Redux is used for state management in the webapp. Here are the key concepts and patterns:
+
+Actions:
+- Actions represent operations that cause state changes
+- Action creators are functions that return action objects or thunks
+- Actions have a type string and optional data payload
+- Async actions use Redux Thunk for side effects
+- API actions use Client4 for requests
+- Actions live in src/actions directory
+
+Reducers:
+- Pure functions that specify state changes
+- Take previous state and action, return new state
+- Never mutate state directly
+- Use combineReducers for modular state tree
+- Handle specific action types
+- Live in src/reducers directory
+
+Selectors:
+- Functions to compute derived data from state
+- Use Reselect for memoization
+- Simple selectors just return state slice
+- Complex selectors combine multiple selectors
+- Factory functions for parameterized selectors
+- Live in src/selectors directory
+
+React-Redux Integration:
+- Use connect HOC or hooks to access store
+- mapStateToProps selects needed state
+- mapDispatchToProps binds action creators
+- Keep Redux logic separate from components
+- Consider performance in mapStateToProps
+- Use factory selectors properly
+
+Testing:
+- Unit test actions with Jest
+- Mock API calls with Nock
+- Test selectors with different states
+- Test reducers for state transitions
+- Use E2E tests for complex flows
+- Follow existing test patterns
+
+Best Practices:
+- Keep actions focused and simple
+- Avoid state duplication
+- Memoize expensive selectors
+- Consider performance impact
+- Follow existing patterns
+- Write clear tests
+
 15. BUILDING COMPONENTS:
 Requirements for new React components:
 - Must be pure (all rendering information passed via props)
