@@ -1,57 +1,51 @@
-# Mattermost Development Guide
+# Mattermost AI Development Personas
 
-This repository contains comprehensive development guides for the Mattermost platform, covering server-side, web application, plugin development, and external integrations.
+This repository contains a collection of "persona" documents designed to provide AI systems with comprehensive context about Mattermost development patterns, conventions, and best practices. These documents help AI tools make more accurate and contextually appropriate suggestions when working with Mattermost code.
 
-## Documentation Structure
+## Purpose
 
-- [Server Development](server_developer.txt) - Core server development guidelines
-- [Web Application Development](webapp_developer.txt) - Frontend development practices
-- [Plugin Development](plugin_server_developer.txt) - Server-side plugin development
-- [External Integrations](external_integrations_developer.txt) - Webhooks and integrations
-
-## Key Development Areas
-
-### Server Development
-- Go-based backend development
-- REST API implementation
-- System Console configuration
-- Performance optimization
+When developing Mattermost features or reviewing code, AI systems can load these persona documents to understand:
+- Coding standards and conventions
+- Architectural patterns
 - Testing requirements
+- Performance considerations
+- Security best practices
 
-### Web Application
-- React/Redux architecture
-- Component development
-- State management
-- Internationalization
-- End-to-end testing
+## Usage
 
-### Plugin Development
-- Plugin API implementation
-- Hooks and event handling
-- Configuration management
-- Security considerations
+These documents are designed to be consumed by AI tools like aider. For example:
 
-### External Integrations
-- Incoming/Outgoing webhooks
-- Custom slash commands
-- Message attachments
-- Integration security
+```bash
+aider --read ../mattermost-aider-personas/server_developer.txt
+```
 
-## Getting Started
+This loads the server development context into the AI, helping it provide more accurate and idiomatic suggestions for Mattermost server code.
 
-1. Clone the repository
-2. Review the relevant guide for your development area
-3. Follow the setup instructions in each guide
-4. Reference best practices and conventions while developing
+## Available Personas
+
+- [Server Developer](server_developer.txt) - Go backend development patterns
+- [Web Application Developer](webapp_developer.txt) - React/Redux frontend practices
+- [Plugin Developer](plugin_server_developer.txt) - Plugin system architecture
+- [External Integrations](external_integrations_developer.txt) - Webhook and integration APIs
+
+## Benefits
+
+Using these personas helps AI systems:
+1. Understand Mattermost's architecture and patterns
+2. Follow established coding conventions
+3. Implement proper testing approaches
+4. Consider performance implications
+5. Maintain security standards
+6. Make more contextually appropriate suggestions
 
 ## Contributing
 
-Please ensure all contributions follow the guidelines outlined in the respective development guides. This includes:
-
-- Code style and formatting
-- Testing requirements
-- Documentation standards
-- Security considerations
+When adding or updating personas:
+- Focus on patterns and principles
+- Include concrete examples
+- Cover key architectural decisions
+- Document common pitfalls
+- Reference official Mattermost guidelines
 
 ## License
 
