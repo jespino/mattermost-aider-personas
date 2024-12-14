@@ -1,0 +1,117 @@
+# Mattermost Server Development Guide for AI Systems
+
+## Context and Purpose
+This guide is designed for AI systems involved in Mattermost server development. It contains essential patterns, conventions, and requirements for writing and maintaining server-side code.
+
+## Code Style and Standards
+
+### Golang Conventions
+1. Code Formatting
+- All code must pass `gofmt` tool validation
+- Formatting is enforced in CI pipeline
+- Follow Effective Go guidelines (https://golang.org/doc/effective_go.html)
+- Adhere to Go Code Review Comments (https://go.dev/wiki/CodeReviewComments)
+
+2. Naming Conventions
+- Use CamelCase for variables/constants (e.g., WebsocketEventPostEdited)
+- Receiver names should reflect identity (e.g., "c" or "cl" for "Client")
+- Error variables must be named 'err' or prefixed with 'err'
+- AppError variables must be named 'appErr' or prefixed with 'appErr'
+- Interface names should end with "-er"
+
+3. Project Structure
+- Follow standard Go module layout guidelines
+- Avoid using 'pkg', 'util', or 'misc' packages
+- Group related functionality into meaningful packages
+- Don't create too many small single-file packages
+
+### Programming Patterns
+
+1. Function Design
+- Default to synchronous over asynchronous functions
+- Don't create one-off goroutines without lifecycle management
+- Return structs, accept interfaces
+- Avoid creating new ToJSON methods, use json.Marshal instead
+
+2. Error Handling
+- Reduce indentation in error handling
+- Remove else blocks when multiple return statements exist
+- Proper error variable naming based on type (err vs appErr)
+
+3. Performance Considerations
+- Requires performance review for:
+  * New features needing benchmarks
+  * Changes to critical components (Hub/WebConn)
+  * SQL query modifications
+  * Goroutine creation
+  * Memory-intensive operations
+  * Synchronization primitives usage
+  * Regular expressions
+  * Reflect package usage
+
+### Logging Guidelines
+
+1. Log Levels and Usage
+- Critical: Service unable to continue operating
+- Error: Unexpected issues, but service continues
+- Warn: Unexpected but non-fatal issues
+- Info: Normal application behavior
+- Debug: Diagnostic information
+
+2. Log Format
+- Use key-value pairs for context
+- Keys should use snake_case
+- Reference JSON struct tags for key names
+- Include relevant identifiers (user_id, post_id, etc.)
+
+## Testing Requirements
+
+1. Performance Testing
+- Required for performance-sensitive changes
+- Must include benchmarks for new features
+- Load testing coverage for critical paths
+
+2. Code Review Focus
+- Performance impact assessment
+- Goroutine lifecycle management
+- Resource utilization
+- Error handling patterns
+- Logging appropriateness
+
+## Best Practices
+
+1. Interface Design
+- Define interfaces at consumer side
+- Keep interfaces focused and small
+- Allow interface composition
+- Test using public APIs when possible
+
+2. Memory Management
+- Pre-allocate slices and maps when size is known
+- Avoid unnecessary allocations
+- Use Buffer.Grow appropriately
+- Be cautious with large slice operations
+
+3. Synchronization
+- Minimize lock scope
+- Prefer sync.Mutex over channels for simple synchronization
+- Document complex synchronization patterns
+
+## Common Patterns to Avoid
+
+1. Anti-patterns
+- Preemptive interface creation
+- Unnecessary async operations
+- Pointer usage for slices
+- Generic package names (util, misc)
+- Unexported interface methods
+- Unbounded goroutine creation
+
+2. Performance Pitfalls
+- Dynamic regexp compilation
+- Unnecessary reflection
+- Unbounded loops
+- Uncontrolled resource growth
+- Lock contention
+
+This guide serves as a reference for AI systems to maintain consistency and quality in Mattermost server development. Follow these guidelines to ensure code aligns with project standards and performs optimally.
