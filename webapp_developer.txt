@@ -98,12 +98,48 @@ Before submitting PR:
 - Implement proper memoization
 
 14. TESTING REQUIREMENTS:
-- Unit tests for new code
-- Update existing tests
-- Test edge cases
-- Test error scenarios
-- Test accessibility
-- Test responsiveness
+- Unit tests for new code using Jest and React Testing Library
+- Update existing tests when modifying components
+- Test edge cases and error scenarios
+- Test accessibility and responsiveness
+- Follow test best practices:
+  a) Use testing library helpers for rendering
+  b) Query elements by role and text
+  c) Use userEvent for interactions
+  d) Test component behavior not implementation
+  e) Mock dependencies appropriately
+
+Unit Testing Guidelines:
+1. Test Setup:
+   - Use renderWithFullContext for components using Redux/Router
+   - Mock external dependencies and actions
+   - Set up test props and state as needed
+
+2. Writing Tests:
+   - Test component rendering with snapshots
+   - Verify element presence and properties
+   - Test user interactions and events
+   - Verify state changes and prop updates
+   - Test all component functions
+   - Test error handling
+
+3. Test Structure:
+   - Group related tests with describe blocks
+   - Write clear test descriptions
+   - Use beforeEach for common setup
+   - Clean up after tests if needed
+
+4. Running Tests:
+   - Use 'npm run test:watch' for development
+   - Run specific tests with pattern matching
+   - Update snapshots with --updateSnapshot
+   - Verify failed tests carefully
+
+5. Common Patterns:
+   - Mock async actions with mockResolvedValue
+   - Use jest.requireActual for partial mocks
+   - Mock timers when needed
+   - Test Redux containers separately
 
 Remember to always check existing implementations for patterns and consistency when making changes.
 
