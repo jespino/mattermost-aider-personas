@@ -1,0 +1,108 @@
+MATTERMOST WEBAPP DEVELOPMENT GUIDE FOR AI
+
+CONTEXT:
+You are working on the webapp portion of the Mattermost project, specifically in the `webapp` directory of the main Mattermost repository.
+
+DEVELOPMENT WORKFLOW:
+1. BRANCH NAMING:
+- Format: MM-$NUMBER_$DESCRIPTION for Jira tickets
+- Format: GH-$NUMBER_$DESCRIPTION for GitHub issues
+- Example: MM-18150_plugin-panic-log
+
+2. DEVELOPMENT ENVIRONMENT:
+- Location: Work in webapp directory
+- Server requirements: Local Mattermost server running on http://localhost:8065
+- Build system: Uses make commands
+
+3. RUNNING THE APPLICATION:
+Option 1 - Combined:
+- Command: `make run` from server directory
+- Stops both: `make stop`
+
+Option 2 - Separate:
+- Server: `make run-server` in server directory
+- Webapp: `make run` in webapp directory
+- Stop server: `make stop-server`
+- Stop webapp: `make stop`
+
+4. CODE CHANGES:
+- Webapp changes auto-rebuild
+- Server changes require `make restart-server`
+- Follow existing code style and patterns
+- Write/modify unit tests as needed
+
+5. INTERNATIONALIZATION:
+- For new/modified text strings:
+  - Run `make i18n-extract` in channels directory
+  - Updates src/i18n/en.json
+  - Only modify en.json directly
+  - Other languages updated via Weblate
+
+6. QUALITY CHECKS:
+Before submitting PR:
+- Style check: `make check-style`
+- Auto-fix style: `make fix-style`
+- Type check: `make check-types`
+- Unit tests: `make test`
+
+7. TESTING:
+- Run unit tests with `make test`
+- Test changes locally in browser
+- Verify changes work with server
+- Test with sample data if needed
+
+8. BEST PRACTICES:
+- Keep branch updated with master
+- Follow existing patterns
+- Write clear commit messages
+- Document complex logic
+- Consider mobile compatibility
+- Consider performance impact
+- Follow accessibility guidelines
+
+9. COMMON DIRECTORIES:
+- /src/actions/: Redux actions
+- /src/components/: React components
+- /src/stores/: Redux stores
+- /src/utils/: Utility functions
+- /src/selectors/: Redux selectors
+- /src/types/: TypeScript definitions
+
+10. KEY TECHNOLOGIES:
+- React for UI
+- Redux for state management
+- TypeScript for type safety
+- Jest for testing
+- webpack for building
+- SASS for styling
+
+11. IMPORTANT CONSIDERATIONS:
+- Maintain backward compatibility
+- Consider server API interactions
+- Follow security best practices
+- Optimize performance
+- Support i18n/localization
+- Maintain accessibility
+- Support theme customization
+
+12. ERROR HANDLING:
+- Use proper error boundaries
+- Implement proper loading states
+- Handle network errors gracefully
+- Log appropriate debug information
+
+13. STATE MANAGEMENT:
+- Use Redux for global state
+- Use React hooks for local state
+- Follow existing selector patterns
+- Implement proper memoization
+
+14. TESTING REQUIREMENTS:
+- Unit tests for new code
+- Update existing tests
+- Test edge cases
+- Test error scenarios
+- Test accessibility
+- Test responsiveness
+
+Remember to always check existing implementations for patterns and consistency when making changes.
