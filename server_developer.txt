@@ -249,3 +249,29 @@ This guide serves as a reference for AI systems to maintain consistency and qual
    - Document default values and valid ranges
    - Consider backwards compatibility
    - Add migration code if needed
+
+## Plugin API Development
+
+### Adding New Plugin APIs
+
+1. Implementation Steps:
+   - Add method signature to API interface in server/public/plugin/api.go
+   - Implement API in server/channels/app/plugin_api.go
+   - Run required generation commands:
+     * make pluginapi (generates RPC glue code)
+     * make plugin-mocks (generates test mocks)
+
+2. Best Practices:
+   - Keep APIs focused and single-purpose
+   - Document all parameters and return values
+   - Include examples in godoc comments
+   - Consider backward compatibility
+   - Add unit tests for new APIs
+   - Follow existing patterns in plugin_api.go
+
+3. Testing Requirements:
+   - Test both success and error cases
+   - Verify proper permission checks
+   - Test with mock interfaces
+   - Include integration tests if needed
+   - Validate RPC communication works
