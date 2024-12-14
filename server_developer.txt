@@ -119,11 +119,91 @@ This guide serves as a reference for AI systems to maintain consistency and qual
 ## Developer Workflow
 
 ### Repository Structure
-- ./server/channels/api4/: API and application related code
-- ./server/public/model/: Data model definitions and Go driver
-- ./server/channels/store/: Database querying code
-- ./server/channels/utils/: Utilities (mail, etc.)
-- ./server/i18n/: Localization files
+
+The server codebase is organized into several key packages:
+
+1. API Layer:
+   - api4/: RESTful JSON Web Service (v4)
+     * Handles HTTP requests/responses
+     * Input validation and error handling
+     * Permission checks
+     * Route definitions and handlers
+
+2. Core Packages:
+   - app/: Application logic layer
+     * Core business logic implementation
+     * Service coordination
+     * Data manipulation and processing
+     * Event handling and WebSocket management
+   
+   - model/: Data models and types
+     * Struct definitions
+     * Validation logic
+     * Serialization helpers
+     * Client-side API definitions
+
+3. Storage Layer:
+   - store/: Database and caching interface
+     * SQL store implementations
+     * Cache layer management
+     * Transaction handling
+     * Migration management
+   
+   - sqlstore/: SQL-specific implementations
+     * MySQL/PostgreSQL queries
+     * Index management
+     * Performance optimizations
+
+4. Supporting Packages:
+   - cmd/: Command line tools
+     * Server initialization
+     * CLI commands
+     * Configuration management
+   
+   - jobs/: Background job system
+     * Job scheduling
+     * Worker pool management
+     * Periodic tasks
+   
+   - services/: Standalone services
+     * Image proxy
+     * Timezones
+     * Search indexing
+   
+   - utils/: Utility functions
+     * File handling
+     * Encryption
+     * Network operations
+     * Logging
+   
+   - web/: Static content serving
+     * Web server setup
+     * Asset management
+     * Browser caching
+
+5. Enterprise Features:
+   - einterfaces/: Enterprise interfaces
+     * Plugin hooks
+     * Feature gates
+     * Extended functionality
+   
+   - enterprise/: Enterprise implementations
+     * Licensed features
+     * Advanced security
+     * Compliance features
+
+6. Integration Points:
+   - plugin/: Plugin system
+     * Plugin API definitions
+     * Hook implementations
+     * RPC infrastructure
+   
+   - shared/: Shared components
+     * Common utilities
+     * Shared interfaces
+     * Cross-package types
+
+Each package follows single responsibility principle and maintains clear dependency boundaries. Direct dependencies between packages should follow the layered architecture (API → App → Store).
 
 ### Development Process
 1. Create feature branches named 'MM-$NUMBER_$DESCRIPTION'
