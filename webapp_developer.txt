@@ -106,3 +106,57 @@ Before submitting PR:
 - Test responsiveness
 
 Remember to always check existing implementations for patterns and consistency when making changes.
+
+15. BUILDING COMPONENTS:
+Requirements for new React components:
+- Must be pure (all rendering information passed via props)
+- No direct store interaction (use connect wrapper if needed)
+- Must have component tests
+- Should be generic and re-usable when possible
+- Props must be documented
+
+Component Development Process:
+1. Design the Component:
+   - Carefully plan props as they are the component's API
+   - Props should be read-only
+   - Document each prop with clear comments
+   - Mark props as required or optional appropriately
+   - Use TypeScript for type safety
+
+2. Redux Container Usage:
+   - Create index.ts container if component needs:
+     a) Data injection not available to parent
+     b) Actions that affect store state
+   - Use mapStateToProps for state access
+   - Use mapDispatchToProps for actions
+   - Keep Redux logic separate from component logic
+
+3. Component Implementation:
+   - Use functional components (preferred over class components)
+   - Extend React.PureComponent if using class components
+   - Follow existing patterns in the codebase
+   - Keep components focused and single-purpose
+   - Consider performance implications
+
+4. File Structure:
+   - Component file: component_name.tsx
+   - Container file: index.ts (if needed)
+   - Test file: component_name.test.tsx
+   - Place files in a component_name/ directory
+
+5. Testing Requirements:
+   - Write comprehensive unit tests
+   - Test all component behaviors
+   - Test prop variations
+   - Test user interactions
+   - Test error cases
+
+Example Component Structure:
+/component_name/
+  ├── index.ts (Redux container)
+  ├── component_name.tsx (Component implementation)
+  └── component_name.test.tsx (Tests)
+
+For new React/Redux developers, recommended resources:
+- https://react.dev/learn/
+- http://redux.js.org/
