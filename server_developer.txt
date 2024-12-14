@@ -115,3 +115,64 @@ This guide is designed for AI systems involved in Mattermost server development.
 - Lock contention
 
 This guide serves as a reference for AI systems to maintain consistency and quality in Mattermost server development. Follow these guidelines to ensure code aligns with project standards and performs optimally.
+
+## Developer Workflow
+
+### Repository Structure
+- ./server/channels/api4/: API and application related code
+- ./server/public/model/: Data model definitions and Go driver
+- ./server/channels/store/: Database querying code
+- ./server/channels/utils/: Utilities (mail, etc.)
+- ./server/i18n/: Localization files
+
+### Development Process
+1. Create feature branches named 'MM-$NUMBER_$DESCRIPTION'
+   - $NUMBER = Jira ticket number
+   - $DESCRIPTION = Short description
+   - Example: MM-18150_plugin-panic-log
+
+2. Testing Requirements:
+   - Write/modify unit tests using testify
+   - Test files must end with _test.go
+   - Place tests in same folder as tested code
+   - Run 'make store-mocks' and 'make store-layers' for store changes
+   - Use 'make run-server' to start server at http://localhost:8065
+   - Use 'make check-style' for syntax checking
+   - Run tests with:
+     * make test (all tests)
+     * go test -run "TestName" ./<directory> (individual)
+     * go test <package> (package tests)
+
+3. Key Make Commands:
+   - make run: Run server with webapp watcher
+   - make stop: Stop server and webapp
+   - make run-server: Run server only
+   - make debug-server: Run with delve debugger
+   - make update-docker: Update Docker images
+   - make clean-docker: Remove Docker images
+   - make config-reset: Reset config.json
+   - make nuke: Fresh environment reset
+   - make package: Create distribution packages
+
+4. CLI Tools:
+   - mattermost db reset: Reset database
+   - mmctl sampledata: Generate test data
+   - mmctl user create: Create users
+   
+5. Environment Customization:
+   - Use config.override.mk for Makefile variables
+   - Create docker-compose.override.yaml for custom services
+
+6. Email Testing:
+   - SMTP server available on port 2500
+   - Inbucket webmail on port 9000
+   - No authentication required
+
+7. GitLab Testing:
+   - Replace binary in /opt/gitlab/embedded/bin/mattermost
+   - Update assets in /opt/gitlab/embedded/service/mattermost
+
+8. Pull Request Guidelines:
+   - Avoid rebasing after PR submission
+   - Avoid force-pushing to PR branches
+   - Commits will be automatically squashed on merge
