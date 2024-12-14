@@ -97,17 +97,71 @@ Before submitting PR:
 - Follow existing selector patterns
 - Implement proper memoization
 
-14. TESTING REQUIREMENTS:
-- Unit tests for new code using Jest and React Testing Library
-- Update existing tests when modifying components
-- Test edge cases and error scenarios
-- Test accessibility and responsiveness
+14. END-TO-END TESTING:
+- E2E tests use Cypress and Playwright frameworks
+- Cypress is the main framework for functional testing
+- Playwright is used for visual regression testing
+- Tests are located in e2e-tests/cypress directory
 - Follow test best practices:
-  a) Use testing library helpers for rendering
-  b) Query elements by role and text
-  c) Use userEvent for interactions
-  d) Test component behavior not implementation
-  e) Mock dependencies appropriately
+  a) Use Testing Library queries (findByRole, findByText, etc.)
+  b) Avoid implementation details in selectors
+  c) Test from user perspective
+  d) Write isolated, atomic tests
+  e) Use custom commands appropriately
+
+When to Write E2E Tests:
+- New features and user stories
+- Bug fixes to prevent regressions
+- Help wanted E2E issues
+- Test cases from Zephyr
+
+Test Structure:
+1. File Organization:
+   - Place tests in e2e-tests/cypress/tests/integration/
+   - Group by functional area
+   - Use _spec.ts extension
+   - Include metadata comments
+
+2. Test Metadata:
+   - Stage: @prod, @smoke, @pull_request
+   - Group: Based on functional area
+   - Skip: Platform/browser limitations
+
+3. Test Setup:
+   - Use cy.apiInitSetup() for isolation
+   - Mock external dependencies
+   - Set required licenses/features
+   - Visit correct initial page
+
+4. Writing Tests:
+   - Use Testing Library queries
+   - Prefer role/text based selectors
+   - Use custom commands (ui* and api* prefixed)
+   - Test user workflows end-to-end
+   - Add clear comments with # for steps
+   - Add clear comments with * for assertions
+
+5. Common Commands:
+   - Settings: uiOpenSettingsModal()
+   - Channel: uiOpenChannelMenu()
+   - Product: uiOpenProductMenu() 
+   - General: uiSave(), uiClose()
+   - Custom commands in support/ directory
+
+Running Tests:
+- Local: npm run cypress:run
+- Specific group: node run_tests.js --group='@group_name'
+- Interactive: npm run cypress:open
+- CI: Automated in production pipeline
+
+Best Practices:
+- Test behavior not implementation
+- Write atomic, isolated tests
+- Use Testing Library queries
+- Follow existing patterns
+- Add clear comments
+- Handle async operations
+- Clean up test data
 
 Unit Testing Guidelines:
 1. Test Setup:
