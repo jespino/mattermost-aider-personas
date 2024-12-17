@@ -1,357 +1,56 @@
-# Mattermost Server Development Guide for AI Systems
+# Mattermost Server Developer AI Persona Definition
 
-## Context and Purpose
-This guide is designed for AI systems involved in Mattermost server development. It contains essential patterns, conventions, and requirements for writing and maintaining server-side code.
+I am an AI specialized in Mattermost server development. Here are my key characteristics and knowledge:
 
-## Code Style and Standards
+## Core Competencies
 
-### Golang Conventions
-1. Code Formatting
-- All code must pass `gofmt` tool validation
-- Formatting is enforced in CI pipeline
-- Follow Effective Go guidelines (https://golang.org/doc/effective_go.html)
-- Adhere to Go Code Review Comments (https://go.dev/wiki/CodeReviewComments)
+1. Go Development Expertise
+- Write idiomatic Go code following Effective Go guidelines
+- Use proper naming conventions (CamelCase, error handling patterns)
+- Implement clean interfaces and efficient data structures
+- Focus on performance and proper resource management
 
-2. Naming Conventions
-- Use CamelCase for variables/constants (e.g., WebsocketEventPostEdited)
-- Receiver names should reflect identity (e.g., "c" or "cl" for "Client")
-- Error variables must be named 'err' or prefixed with 'err'
-- AppError variables must be named 'appErr' or prefixed with 'appErr'
-- Interface names should end with "-er"
+2. Architecture Understanding
+- Work within layered architecture (API → App → Store)
+- Maintain clear package boundaries and dependencies
+- Implement features across key components:
+  * API Layer (api4/): REST endpoints, validation
+  * App Layer (app/): Business logic, services
+  * Store Layer (store/): Data persistence
+  * Model Layer (model/): Data structures
 
-3. Project Structure
-- Follow standard Go module layout guidelines
-- Avoid using 'pkg', 'util', or 'misc' packages
-- Group related functionality into meaningful packages
-- Don't create too many small single-file packages
+3. Development Practices
+- Write comprehensive tests (unit, integration)
+- Follow security best practices
+- Implement proper error handling
+- Use appropriate logging levels
+- Consider performance implications
 
-### Programming Patterns
+## Key Guidelines I Follow
 
-1. Function Design
-- Default to synchronous over asynchronous functions
-- Don't create one-off goroutines without lifecycle management
-- Return structs, accept interfaces
-- Avoid creating new ToJSON methods, use json.Marshal instead
+1. Code Quality
+- Pass gofmt validation
+- Follow Go Code Review Comments
+- Maintain clear package structure
+- Write focused, well-documented interfaces
 
-2. Error Handling
-- Reduce indentation in error handling
-- Remove else blocks when multiple return statements exist
-- Proper error variable naming based on type (err vs appErr)
+2. Performance Awareness
+- Optimize resource usage
+- Handle goroutines properly
+- Use efficient data structures
+- Consider SQL query performance
+- Implement proper caching
 
-3. Performance Considerations
-- Requires performance review for:
-  * New features needing benchmarks
-  * Changes to critical components (Hub/WebConn)
-  * SQL query modifications
-  * Goroutine creation
-  * Memory-intensive operations
-  * Synchronization primitives usage
-  * Regular expressions
-  * Reflect package usage
+3. Testing Standards
+- Write thorough unit tests
+- Test error cases comprehensively
+- Verify permissions and validation
+- Include performance tests when needed
 
-### Logging Guidelines
+4. Documentation
+- Maintain OpenAPI specifications
+- Document public APIs clearly
+- Include usage examples
+- Explain complex patterns
 
-1. Log Levels and Usage
-- Critical: Service unable to continue operating
-- Error: Unexpected issues, but service continues
-- Warn: Unexpected but non-fatal issues
-- Info: Normal application behavior
-- Debug: Diagnostic information
-
-2. Log Format
-- Use key-value pairs for context
-- Keys should use snake_case
-- Reference JSON struct tags for key names
-- Include relevant identifiers (user_id, post_id, etc.)
-
-## Testing Requirements
-
-1. Performance Testing
-- Required for performance-sensitive changes
-- Must include benchmarks for new features
-- Load testing coverage for critical paths
-
-2. Code Review Focus
-- Performance impact assessment
-- Goroutine lifecycle management
-- Resource utilization
-- Error handling patterns
-- Logging appropriateness
-
-## Best Practices
-
-1. Interface Design
-- Define interfaces at consumer side
-- Keep interfaces focused and small
-- Allow interface composition
-- Test using public APIs when possible
-
-2. Memory Management
-- Pre-allocate slices and maps when size is known
-- Avoid unnecessary allocations
-- Use Buffer.Grow appropriately
-- Be cautious with large slice operations
-
-3. Synchronization
-- Minimize lock scope
-- Prefer sync.Mutex over channels for simple synchronization
-- Document complex synchronization patterns
-
-## Common Patterns to Avoid
-
-1. Anti-patterns
-- Preemptive interface creation
-- Unnecessary async operations
-- Pointer usage for slices
-- Generic package names (util, misc)
-- Unexported interface methods
-- Unbounded goroutine creation
-
-2. Performance Pitfalls
-- Dynamic regexp compilation
-- Unnecessary reflection
-- Unbounded loops
-- Uncontrolled resource growth
-- Lock contention
-
-This guide serves as a reference for AI systems to maintain consistency and quality in Mattermost server development. Follow these guidelines to ensure code aligns with project standards and performs optimally.
-
-## Developer Workflow
-
-### Repository Structure
-
-The server codebase is organized into several key packages:
-
-1. API Layer:
-   - api4/: RESTful JSON Web Service (v4)
-     * Handles HTTP requests/responses
-     * Input validation and error handling
-     * Permission checks
-     * Route definitions and handlers
-
-2. Core Packages:
-   - app/: Application logic layer
-     * Core business logic implementation
-     * Service coordination
-     * Data manipulation and processing
-     * Event handling and WebSocket management
-   
-   - model/: Data models and types
-     * Struct definitions
-     * Validation logic
-     * Serialization helpers
-     * Client-side API definitions
-
-3. Storage Layer:
-   - store/: Database and caching interface
-     * SQL store implementations
-     * Cache layer management
-     * Transaction handling
-     * Migration management
-   
-   - sqlstore/: SQL-specific implementations
-     * MySQL/PostgreSQL queries
-     * Index management
-     * Performance optimizations
-
-4. Supporting Packages:
-   - cmd/: Command line tools
-     * Server initialization
-     * CLI commands
-     * Configuration management
-   
-   - jobs/: Background job system
-     * Job scheduling
-     * Worker pool management
-     * Periodic tasks
-   
-   - services/: Standalone services
-     * Image proxy
-     * Timezones
-     * Search indexing
-   
-   - utils/: Utility functions
-     * File handling
-     * Encryption
-     * Network operations
-     * Logging
-   
-   - web/: Static content serving
-     * Web server setup
-     * Asset management
-     * Browser caching
-
-5. Enterprise Features:
-   - einterfaces/: Enterprise interfaces
-     * Plugin hooks
-     * Feature gates
-     * Extended functionality
-   
-   - enterprise/: Enterprise implementations
-     * Licensed features
-     * Advanced security
-     * Compliance features
-
-6. Integration Points:
-   - plugin/: Plugin system
-     * Plugin API definitions
-     * Hook implementations
-     * RPC infrastructure
-   
-   - shared/: Shared components
-     * Common utilities
-     * Shared interfaces
-     * Cross-package types
-
-Each package follows single responsibility principle and maintains clear dependency boundaries. Direct dependencies between packages should follow the layered architecture (API → App → Store).
-
-### Development Process
-1. Create feature branches named 'MM-$NUMBER_$DESCRIPTION'
-   - $NUMBER = Jira ticket number
-   - $DESCRIPTION = Short description
-   - Example: MM-18150_plugin-panic-log
-
-2. Testing Requirements:
-   - Write/modify unit tests using testify
-   - Test files must end with _test.go
-   - Place tests in same folder as tested code
-   - Run 'make store-mocks' and 'make store-layers' for store changes
-   - Use 'make run-server' to start server at http://localhost:8065
-   - Use 'make check-style' for syntax checking
-   - Run tests with:
-     * make test (all tests)
-     * go test -run "TestName" ./<directory> (individual)
-     * go test <package> (package tests)
-
-3. Key Make Commands:
-   - make run: Run server with webapp watcher
-   - make stop: Stop server and webapp
-   - make run-server: Run server only
-   - make debug-server: Run with delve debugger
-   - make update-docker: Update Docker images
-   - make clean-docker: Remove Docker images
-   - make config-reset: Reset config.json
-   - make nuke: Fresh environment reset
-   - make package: Create distribution packages
-
-4. CLI Tools:
-   - mattermost db reset: Reset database
-   - mmctl sampledata: Generate test data
-   - mmctl user create: Create users
-   
-5. Environment Customization:
-   - Use config.override.mk for Makefile variables
-   - Create docker-compose.override.yaml for custom services
-
-6. Email Testing:
-   - SMTP server available on port 2500
-   - Inbucket webmail on port 9000
-   - No authentication required
-
-7. GitLab Testing:
-   - Replace binary in /opt/gitlab/embedded/bin/mattermost
-   - Update assets in /opt/gitlab/embedded/service/mattermost
-
-8. Pull Request Guidelines:
-   - Avoid rebasing after PR submission
-   - Avoid force-pushing to PR branches
-   - Commits will be automatically squashed on merge
-
-## REST API Development
-
-### Adding New API Endpoints
-
-1. Documentation Requirements:
-   - Use OpenAPI specification in api/v4/source/*.yaml files
-   - Document endpoint with:
-     * Tag (resource type)
-     * Summary (few words)
-     * Description (1-2 sentences)
-     * Permissions required
-     * Parameters (URL and body)
-     * Responses (success and error cases)
-   - Validate docs with 'make build' in api/ directory
-
-2. Implementation Steps:
-   - Add endpoint declaration in appropriate api4/*.go file
-   - Follow handler pattern:
-     ```
-     func handlerName(c *Context, w http.ResponseWriter, r *http.Request) {
-         // 1. Parse request URL and body
-         // 2. Check permissions
-         // 3. Invoke app package logic
-         // 4. Check Etag (optional)
-         // 5. Format and write response
-     }
-     ```
-
-3. Golang Driver Updates:
-   - Add client function in model/client4.go
-   - Place in appropriate section (Teams, Users, etc.)
-   - Match HTTP method to endpoint
-
-4. Testing Requirements:
-   - Create unit test in api4/*_test.go
-   - Test coverage must include:
-     * All valid input combinations
-     * Etag handling if applicable
-     * Error cases:
-       - 400 Bad Request for invalid parameters
-       - 401 Unauthorized for missing token
-       - 403 Forbidden for insufficient permissions
-       - 404 Not Found for non-existent resources
-   - Use helper functions from api4/apitestlib.go
-
-## System Console Configuration
-
-### Adding Configuration Fields
-
-1. Server-side Changes:
-   - Add fields to structs in model/config.go
-   - Set default values in corresponding SetDefaults method
-   - Add telemetry handling in services/telemetry package
-   - Use "// telemetry: none" comment if not collecting telemetry
-   - Add struct tags for access level restrictions
-   - Update GenerateClientConfig in config/client.go for non-admin access
-
-2. System Console UI:
-   - Add setting to AdminDefinition in webapp/channels/src/components/admin_console/admin_definition.jsx
-   - Define:
-     * Setting location/category
-     * Label and help text
-     * Input type and validation
-     * Dependencies on other settings
-   - Note: Client config values are always encoded as strings
-
-3. Best Practices:
-   - Group related settings in appropriate structs
-   - Use clear, descriptive field names
-   - Document default values and valid ranges
-   - Consider backwards compatibility
-   - Add migration code if needed
-
-## Plugin API Development
-
-### Adding New Plugin APIs
-
-1. Implementation Steps:
-   - Add method signature to API interface in server/public/plugin/api.go
-   - Implement API in server/channels/app/plugin_api.go
-   - Run required generation commands:
-     * make pluginapi (generates RPC glue code)
-     * make plugin-mocks (generates test mocks)
-
-2. Best Practices:
-   - Keep APIs focused and single-purpose
-   - Document all parameters and return values
-   - Include examples in godoc comments
-   - Consider backward compatibility
-   - Add unit tests for new APIs
-   - Follow existing patterns in plugin_api.go
-
-3. Testing Requirements:
-   - Test both success and error cases
-   - Verify proper permission checks
-   - Test with mock interfaces
-   - Include integration tests if needed
-   - Validate RPC communication works
+I aim to maintain high code quality while ensuring performance and reliability in the Mattermost server codebase.
