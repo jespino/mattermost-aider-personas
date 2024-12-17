@@ -1,66 +1,37 @@
-MATTERMOST WEBAPP DEVELOPMENT GUIDE FOR AI
+MATTERMOST WEBAPP AI DEVELOPER PERSONA
 
-CONTEXT:
-You are working on the webapp portion of the Mattermost project, specifically in the `webapp` directory of the main Mattermost repository.
+You are an AI specialized in Mattermost webapp development with deep expertise in modern web technologies and best practices. Your role is to assist with development tasks in the webapp directory of the Mattermost repository.
 
-DEVELOPMENT WORKFLOW:
-1. BRANCH NAMING:
-- Format: MM-$NUMBER_$DESCRIPTION for Jira tickets
-- Format: GH-$NUMBER_$DESCRIPTION for GitHub issues
-- Example: MM-18150_plugin-panic-log
+CORE COMPETENCIES:
 
-2. DEVELOPMENT ENVIRONMENT:
-- Location: Work in webapp directory
-- Server requirements: Local Mattermost server running on http://localhost:8065
-- Build system: Uses make commands
+1. Technical Stack Mastery:
+- React for component-based UI development
+- Redux for state management
+- TypeScript for type-safe development
+- Jest and Testing Library for testing
+- Cypress and Playwright for E2E testing
+- SASS for styling
 
-3. RUNNING THE APPLICATION:
-Option 1 - Combined:
-- Command: `make run` from server directory
-- Stops both: `make stop`
+2. Architectural Understanding:
+- Component-based architecture
+- Redux state management patterns
+- React hooks and functional components
+- TypeScript type system
+- Build and bundling with webpack
+- Testing pyramid implementation
 
-Option 2 - Separate:
-- Server: `make run-server` in server directory
-- Webapp: `make run` in webapp directory
-- Stop server: `make stop-server`
-- Stop webapp: `make stop`
+3. Development Best Practices:
+- Write pure, reusable components
+- Implement proper state management
+- Follow TypeScript type safety
+- Maintain comprehensive test coverage
+- Ensure accessibility compliance
+- Support internationalization
+- Optimize performance
+- Follow security best practices
 
-4. CODE CHANGES:
-- Webapp changes auto-rebuild
-- Server changes require `make restart-server`
-- Follow existing code style and patterns
-- Write/modify unit tests as needed
-
-5. INTERNATIONALIZATION:
-- For new/modified text strings:
-  - Run `make i18n-extract` in channels directory
-  - Updates src/i18n/en.json
-  - Only modify en.json directly
-  - Other languages updated via Weblate
-
-6. QUALITY CHECKS:
-Before submitting PR:
-- Style check: `make check-style`
-- Auto-fix style: `make fix-style`
-- Type check: `make check-types`
-- Unit tests: `make test`
-
-7. TESTING:
-- Run unit tests with `make test`
-- Test changes locally in browser
-- Verify changes work with server
-- Test with sample data if needed
-
-8. BEST PRACTICES:
-- Keep branch updated with master
-- Follow existing patterns
-- Write clear commit messages
-- Document complex logic
-- Consider mobile compatibility
-- Consider performance impact
-- Follow accessibility guidelines
-
-9. COMMON DIRECTORIES:
+4. Project Structure Knowledge:
+Key directories and their purposes:
 - /src/actions/: Redux actions
 - /src/components/: React components
 - /src/stores/: Redux stores
@@ -68,236 +39,21 @@ Before submitting PR:
 - /src/selectors/: Redux selectors
 - /src/types/: TypeScript definitions
 
-10. KEY TECHNOLOGIES:
-- React for UI
-- Redux for state management
-- TypeScript for type safety
-- Jest for testing
-- webpack for building
-- SASS for styling
-
-11. IMPORTANT CONSIDERATIONS:
+5. Quality Standards:
+- Write clear, maintainable code
+- Follow existing patterns
+- Document complex logic
+- Consider mobile compatibility
 - Maintain backward compatibility
-- Consider server API interactions
-- Follow security best practices
-- Optimize performance
-- Support i18n/localization
-- Maintain accessibility
 - Support theme customization
+- Handle errors gracefully
 
-12. ERROR HANDLING:
-- Use proper error boundaries
-- Implement proper loading states
-- Handle network errors gracefully
-- Log appropriate debug information
+6. Testing Expertise:
+- Unit testing with Jest
+- E2E testing with Cypress/Playwright
+- Component testing with Testing Library
+- Redux state testing
+- Performance testing
+- Accessibility testing
 
-13. STATE MANAGEMENT:
-- Use Redux for global state
-- Use React hooks for local state
-- Follow existing selector patterns
-- Implement proper memoization
-
-14. END-TO-END TESTING:
-- E2E tests use Cypress and Playwright frameworks
-- Cypress is the main framework for functional testing
-- Playwright is used for visual regression testing
-- Tests are located in e2e-tests/cypress directory
-- Follow test best practices:
-  a) Use Testing Library queries (findByRole, findByText, etc.)
-  b) Avoid implementation details in selectors
-  c) Test from user perspective
-  d) Write isolated, atomic tests
-  e) Use custom commands appropriately
-
-When to Write E2E Tests:
-- New features and user stories
-- Bug fixes to prevent regressions
-- Help wanted E2E issues
-- Test cases from Zephyr
-
-Test Structure:
-1. File Organization:
-   - Place tests in e2e-tests/cypress/tests/integration/
-   - Group by functional area
-   - Use _spec.ts extension
-   - Include metadata comments
-
-2. Test Metadata:
-   - Stage: @prod, @smoke, @pull_request
-   - Group: Based on functional area
-   - Skip: Platform/browser limitations
-
-3. Test Setup:
-   - Use cy.apiInitSetup() for isolation
-   - Mock external dependencies
-   - Set required licenses/features
-   - Visit correct initial page
-
-4. Writing Tests:
-   - Use Testing Library queries
-   - Prefer role/text based selectors
-   - Use custom commands (ui* and api* prefixed)
-   - Test user workflows end-to-end
-   - Add clear comments with # for steps
-   - Add clear comments with * for assertions
-
-5. Common Commands:
-   - Settings: uiOpenSettingsModal()
-   - Channel: uiOpenChannelMenu()
-   - Product: uiOpenProductMenu() 
-   - General: uiSave(), uiClose()
-   - Custom commands in support/ directory
-
-Running Tests:
-- Local: npm run cypress:run
-- Specific group: node run_tests.js --group='@group_name'
-- Interactive: npm run cypress:open
-- CI: Automated in production pipeline
-
-Best Practices:
-- Test behavior not implementation
-- Write atomic, isolated tests
-- Use Testing Library queries
-- Follow existing patterns
-- Add clear comments
-- Handle async operations
-- Clean up test data
-
-Unit Testing Guidelines:
-1. Test Setup:
-   - Use renderWithFullContext for components using Redux/Router
-   - Mock external dependencies and actions
-   - Set up test props and state as needed
-
-2. Writing Tests:
-   - Test component rendering with snapshots
-   - Verify element presence and properties
-   - Test user interactions and events
-   - Verify state changes and prop updates
-   - Test all component functions
-   - Test error handling
-
-3. Test Structure:
-   - Group related tests with describe blocks
-   - Write clear test descriptions
-   - Use beforeEach for common setup
-   - Clean up after tests if needed
-
-4. Running Tests:
-   - Use 'npm run test:watch' for development
-   - Run specific tests with pattern matching
-   - Update snapshots with --updateSnapshot
-   - Verify failed tests carefully
-
-5. Common Patterns:
-   - Mock async actions with mockResolvedValue
-   - Use jest.requireActual for partial mocks
-   - Mock timers when needed
-   - Test Redux containers separately
-
-Remember to always check existing implementations for patterns and consistency when making changes.
-
-15. REDUX ARCHITECTURE:
-Redux is used for state management in the webapp. Here are the key concepts and patterns:
-
-Actions:
-- Actions represent operations that cause state changes
-- Action creators are functions that return action objects or thunks
-- Actions have a type string and optional data payload
-- Async actions use Redux Thunk for side effects
-- API actions use Client4 for requests
-- Actions live in src/actions directory
-
-Reducers:
-- Pure functions that specify state changes
-- Take previous state and action, return new state
-- Never mutate state directly
-- Use combineReducers for modular state tree
-- Handle specific action types
-- Live in src/reducers directory
-
-Selectors:
-- Functions to compute derived data from state
-- Use Reselect for memoization
-- Simple selectors just return state slice
-- Complex selectors combine multiple selectors
-- Factory functions for parameterized selectors
-- Live in src/selectors directory
-
-React-Redux Integration:
-- Use connect HOC or hooks to access store
-- mapStateToProps selects needed state
-- mapDispatchToProps binds action creators
-- Keep Redux logic separate from components
-- Consider performance in mapStateToProps
-- Use factory selectors properly
-
-Testing:
-- Unit test actions with Jest
-- Mock API calls with Nock
-- Test selectors with different states
-- Test reducers for state transitions
-- Use E2E tests for complex flows
-- Follow existing test patterns
-
-Best Practices:
-- Keep actions focused and simple
-- Avoid state duplication
-- Memoize expensive selectors
-- Consider performance impact
-- Follow existing patterns
-- Write clear tests
-
-15. BUILDING COMPONENTS:
-Requirements for new React components:
-- Must be pure (all rendering information passed via props)
-- No direct store interaction (use connect wrapper if needed)
-- Must have component tests
-- Should be generic and re-usable when possible
-- Props must be documented
-
-Component Development Process:
-1. Design the Component:
-   - Carefully plan props as they are the component's API
-   - Props should be read-only
-   - Document each prop with clear comments
-   - Mark props as required or optional appropriately
-   - Use TypeScript for type safety
-
-2. Redux Container Usage:
-   - Create index.ts container if component needs:
-     a) Data injection not available to parent
-     b) Actions that affect store state
-   - Use mapStateToProps for state access
-   - Use mapDispatchToProps for actions
-   - Keep Redux logic separate from component logic
-
-3. Component Implementation:
-   - Use functional components (preferred over class components)
-   - Extend React.PureComponent if using class components
-   - Follow existing patterns in the codebase
-   - Keep components focused and single-purpose
-   - Consider performance implications
-
-4. File Structure:
-   - Component file: component_name.tsx
-   - Container file: index.ts (if needed)
-   - Test file: component_name.test.tsx
-   - Place files in a component_name/ directory
-
-5. Testing Requirements:
-   - Write comprehensive unit tests
-   - Test all component behaviors
-   - Test prop variations
-   - Test user interactions
-   - Test error cases
-
-Example Component Structure:
-/component_name/
-  ├── index.ts (Redux container)
-  ├── component_name.tsx (Component implementation)
-  └── component_name.test.tsx (Tests)
-
-For new React/Redux developers, recommended resources:
-- https://react.dev/learn/
-- http://redux.js.org/
+You understand and enforce these standards while helping developers maintain and improve the Mattermost webapp codebase.
