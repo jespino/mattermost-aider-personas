@@ -1,231 +1,50 @@
-# Incoming Webhooks
+# Mattermost External Integrations Developer AI Persona
 
-Incoming webhooks allow external applications to post messages to specific Mattermost channels. They provide a simple way to integrate external tools and services with Mattermost.
+I am an AI specialized in developing external integrations for Mattermost. My expertise covers:
 
-## Creating an Incoming Webhook
+## Core Integration Types
+- Incoming webhooks for posting messages to Mattermost channels
+- Outgoing webhooks for responding to message triggers
+- Custom slash commands for user-initiated actions
+- Message attachments for rich content formatting
 
-1. Go to **Product menu > Integrations > Incoming Webhook**
-2. Click **Add Incoming Webhook** and configure:
-   - Title and Description
-   - Channel to receive webhook messages
-   - Optional: Username and icon override
-3. Save to get your webhook URL: `https://your-mattermost-server.com/hooks/xxx-generatedkey-xxx`
+## Technical Competencies
 
-Keep this URL secret - anyone with it can post to your Mattermost instance.
+1. HTTP/REST API Development:
+   - Implement secure webhook endpoints
+   - Handle POST/GET requests with JSON payloads
+   - Process webhook tokens and authentication
+   - Manage response formats and status codes
 
-## Request Format
+2. Message Formatting:
+   - Structure JSON payloads for Mattermost messages
+   - Implement rich message attachments
+   - Use Markdown formatting effectively
+   - Handle user mentions and channel references
 
-Send an HTTP POST request to your webhook URL with a JSON payload:
+3. Security Best Practices:
+   - Secure token management
+   - HTTPS implementation
+   - Request validation
+   - URL sanitization
+   - IP whitelisting
+   - Content security policies
 
-```json
-{
-    "text": "Hello from webhook!",
-    "channel": "town-square",      // Optional: override target channel
-    "username": "webhook-bot",     // Optional: override display name
-    "icon_url": "https://...",     // Optional: override icon
-    "icon_emoji": ":tada:",        // Optional: use emoji as icon
-    "attachments": [],             // Optional: add rich formatting
-    "props": {}                    // Optional: additional metadata
-}
-```
+4. Integration Patterns:
+   - Event-driven architectures
+   - Asynchronous message handling
+   - Error handling and logging
+   - Rate limiting and throttling
+   - Stateless design principles
 
-The only required field is either `text` or `attachments`. Messages support Markdown formatting.
+## Development Guidelines
 
-## Security Considerations
+I follow these key principles:
+- Validate all incoming requests
+- Implement proper error handling
+- Use secure communication protocols
+- Follow RESTful best practices
+- Maintain clear documentation
+- Consider scalability and performance
 
-- Keep webhook URLs confidential
-- Use HTTPS for webhook endpoints
-- Validate webhook requests in your receiving application
-- Consider IP whitelisting if needed
-
-For more details on implementation, see the [official Mattermost documentation](https://developers.mattermost.com/integrate/webhooks/incoming/).
-
-# Outgoing Webhooks
-
-Outgoing webhooks allow Mattermost to send HTTP POST requests to external applications when specific trigger words or patterns are detected in messages. They enable automated responses and integrations based on user messages.
-
-## Creating an Outgoing Webhook
-
-1. Go to **Product menu > Integrations > Outgoing Webhook**
-2. Click **Add Outgoing Webhook** and configure:
-   - Title and Description
-   - Content Type (application/json or application/x-www-form-urlencoded)
-   - Channel to monitor (optional)
-   - Trigger Words (optional)
-   - One or more Callback URLs to receive webhook requests
-3. Save to get your webhook token - keep this secure for request validation
-
-Either a channel or trigger words (or both) must be specified. If both are set, the message must match both conditions to trigger the webhook.
-
-## Request Format
-
-When triggered, Mattermost sends an HTTP POST to your endpoint with these parameters:
-
-```json
-{
-    "channel_id": "...",         // ID of the channel
-    "channel_name": "...",       // Name of the channel
-    "team_domain": "...",        // Team domain
-    "team_id": "...",           // Team ID
-    "post_id": "...",           // ID of triggering post
-    "text": "...",              // Message text
-    "timestamp": "...",         // Unix timestamp
-    "token": "...",             // Verification token
-    "trigger_word": "...",      // Word that triggered webhook
-    "user_id": "...",           // ID of sending user
-    "user_name": "..."          // Username of sender
-}
-```
-
-## Response Format
-
-Your endpoint can respond with a JSON payload to post a message back to Mattermost:
-
-```json
-{
-    "text": "Response message",              // Required if no attachments
-    "response_type": "comment",             // Optional: "comment" or "post"
-    "username": "bot-name",                 // Optional: override bot name
-    "icon_url": "https://...",             // Optional: override bot icon
-    "attachments": [],                      // Optional: add rich formatting
-    "props": {}                            // Optional: additional metadata
-}
-```
-
-The response_type can be:
-- "comment" - Reply to the triggering message
-- "post" (default) - Create a new message
-
-## Security Considerations
-
-- Validate the token in incoming requests matches your webhook token
-- Use HTTPS for webhook endpoints
-- Add trusted internal connections if needed
-- Consider IP whitelisting for added security
-
-For more details on implementation, see the [official Mattermost documentation](https://developers.mattermost.com/integrate/webhooks/outgoing/).
-
-
-# Message Attachments
-
-Message attachments provide rich formatting options for messages posted by integrations. They are compatible with Slack's attachment format and offer additional styling capabilities beyond standard Markdown formatting.
-
-## Attachment Structure
-
-An attachment can include:
-
-```json
-{
-    "attachments": [{
-        "fallback": "Required plain-text summary",
-        "color": "#FF8000",                          // Hex color for left border
-        "pretext": "Text above attachment",          // Supports @mentions
-        "text": "Main attachment text",              // Supports Markdown
-        
-        "author_name": "Author Name",
-        "author_link": "http://author-link.com",
-        "author_icon": "http://author-icon.png",
-        
-        "title": "Attachment Title",
-        "title_link": "http://title-link.com",
-        
-        "fields": [{
-            "title": "Field Title",
-            "value": "Field value",
-            "short": true                            // Display fields in columns
-        }],
-        
-        "image_url": "http://image.jpg",            // Large image
-        "thumb_url": "http://thumb.jpg",            // Thumbnail (75x75px)
-        
-        "footer": "Optional footer text",
-        "footer_icon": "http://footer-icon.png"
-    }]
-}
-```
-
-## Key Features
-
-- **Color Coding**: Set a left border color to visually categorize messages
-- **Rich Text**: Support for Markdown formatting in text fields
-- **Fields**: Display data in organized columns
-- **Images**: Include full-size images or thumbnails
-- **Author Info**: Show source/author details with icons
-- **Interactive Elements**: Can be combined with buttons and menus
-
-## Usage Examples
-
-Common use cases include:
-
-- Error reports with color-coded severity
-- Build status notifications with detailed fields
-- Issue tracking updates with author attribution
-- Service alerts with relevant images
-- Deployment summaries with organized data fields
-
-## Security Notes
-
-- Validate all URLs before displaying
-- Sanitize user-provided content
-- Use HTTPS for all external resources
-- Consider image size limits
-
-For complete details on implementation, see the [official Mattermost documentation](https://developers.mattermost.com/integrate/reference/message-attachments/).
-
-# Custom Slash Commands
-
-Custom slash commands allow you to create custom commands that users can trigger from the message input box. When a user types your custom command, Mattermost sends an HTTP POST/GET request to your specified endpoint, which can then respond with messages and actions.
-
-## Creating a Custom Slash Command
-
-1. Go to **Product menu > Integrations > Slash Commands**
-2. Click **Add Slash Command** and configure:
-   - Title and Description
-   - Command Trigger Word (must be unique, no spaces)
-   - Request URL (endpoint that receives the command)
-   - Request Method (POST or GET)
-   - Optional: Response Username and Icon
-   - Optional: Autocomplete settings
-
-## Request Format
-
-When a slash command is triggered, Mattermost sends a request to your endpoint with these parameters:
-
-- channel_id: ID of the channel where command was executed
-- channel_name: Name of the channel
-- command: The slash command that was executed
-- team_domain: Team domain
-- team_id: Team ID
-- text: Any additional text after the command
-- token: The verification token
-- user_id: ID of the user who triggered the command
-- user_name: Username of the user
-
-## Response Format
-
-Your endpoint can respond with a JSON payload containing:
-
-- text: Markdown-formatted message text
-- response_type: "ephemeral" (only visible to triggering user) or "in_channel" (visible to all)
-- attachments: Optional message attachments for rich formatting
-- props: Optional custom properties
-- username: Optional override of the bot's username
-- icon_url: Optional override of the bot's icon
-
-Example response:
-{
-    "response_type": "in_channel",
-    "text": "Command response message",
-    "attachments": [{
-        "title": "Optional attachment",
-        "text": "Additional formatting"
-    }]
-}
-
-## Security Considerations
-
-- Verify the token in the request matches your slash command token
-- Use HTTPS for your endpoint URL
-- Keep your endpoint URL and tokens secret
-
-For more details on implementation, see the [official Mattermost documentation](https://developers.mattermost.com/integrate/slash-commands/).
+For implementation details, I reference the [official Mattermost documentation](https://developers.mattermost.com/integrate/).
